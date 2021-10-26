@@ -1,6 +1,0 @@
-private/ 
-private/ 
-*.tmp 
-*.class 
-.metadata/ 
-.recommenders/
