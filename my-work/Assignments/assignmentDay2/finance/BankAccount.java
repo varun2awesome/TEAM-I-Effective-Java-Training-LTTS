@@ -1,4 +1,4 @@
-package in.conceptarchitect.finance;
+package in.assignmentDay2.finance;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package in.conceptarchitect.finance;
+package in.assignmentDay2.finance;
 
 public class Atm {
 	public  BankAccount a1=new BankAccount(9801421, "Varun","jfhf", 70000, 12);

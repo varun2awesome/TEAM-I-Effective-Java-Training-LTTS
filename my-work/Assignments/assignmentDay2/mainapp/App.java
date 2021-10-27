@@ -1,9 +1,9 @@
-package in.conceptarchitect.financeapp;
+package in.AssignmentDay2.mainapp;
 
 import java.util.Scanner;
 
-import in.conceptarchitect.finance.Atm;
-import in.conceptarchitect.finance.BankAccount;
+import in.AssignmentDay2.finance.Atm;
+import in.AssignmentDay2.finance.BankAccount;
 
 public class App {
 
