@@ -6,7 +6,6 @@ package in.assignment3.2.finance;.Bank;
 public class App {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		Bank B=new Bank(9801,"pa@ss",7700);
 
