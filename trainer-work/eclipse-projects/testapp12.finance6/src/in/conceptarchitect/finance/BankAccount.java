@@ -8,7 +8,27 @@ public class BankAccount {
 	String name;
 	String password;
 	double balance;
-	double interestRate;
+	static double interestRate = 10;
+	
+	public static double getInterestRate() {
+		return interestRate;
+	}
+
+	public static void setInterestRate(double interestRate) {
+		
+		BankAccount.interestRate = interestRate;
+	}
+	
+	
+	public BankAccount(int accountNumber, String name, String password, double amount) {
+		
+		balance=amount; //this is optional here as there is a single balance in the context	
+		this.name=name;
+		setPassword(password);		
+		this.accountNumber=accountNumber;
+		
+	}
+	
 	
 	
 	public int getAccountNumber() {
@@ -34,13 +54,7 @@ public class BankAccount {
 	}
 
 	
-	public double getInterestRate() {
-		return interestRate;
-	}
-
-	public void setInterestRate(double interestRate) {
-		this.interestRate = interestRate;
-	}
+	
 	
 
 	//should there be a getPassword and setPassword
@@ -78,63 +92,55 @@ public class BankAccount {
 		return salted;
 	}
 
-	public BankAccount(int accountNumber, String name, String password, double amount,double interestRate) {
-		
-		balance=amount; //this is optional here as there is a single balance in the context	
-		this.name=name;
-		setPassword(password);
-		this.interestRate=interestRate;
-		this.accountNumber=accountNumber;
-		
-	}
+
 	
 	public void show() {
 		System.out.println("account number\t"+accountNumber);
 		System.out.println("name         \t"+name);
 		System.out.println("password     \t"+password);
 		System.out.println("balance      \t"+balance);
-		System.out.println("interest rate\t"+interestRate);
+		//System.out.println("interest rate\t"+Bank.getInterestRate());
 		System.out.println();
 		
 	}
 
 	public boolean deposit(double amount) {
 		// TODO Auto-generated method stub
-		if(amount>=0) {
+		if(amount>0) {
 			balance+=amount;
-			return true;
-		} else {
 			return false;
+		} else {
+			return true;
 		}
 	}
 
 	public boolean withdraw(double amount, String password) {
 		// TODO Auto-generated method stub
-		if(amount <=0) {
+		if(amount<=0)
 			return false;
-		}
-		
 		if (amount>balance) {
 			return false;
 		} 
-		
-		//if (!this.password.equals(password)) //testing unsalted password
+		//if (!this.password.equals(password))
 		if(!authenticate(password))
 			return false;
 		else {
 			
-			balance-=amount;
+			
 			return true;
 		}
-		
-		
-		
-		
 	}
 	
-	public void creditInterest() {
+	
+	public void creditInterest(double interestRate) {
 		balance+=(balance*interestRate/1200);
 	}
 
 
 }
+
+
+
+
+
+
