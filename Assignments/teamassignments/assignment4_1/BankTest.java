@@ -15,7 +15,6 @@ public class BankTest{
         String password="password";
 		double amount=20000;
 		double wiitdrawamt=10000;
-        Bank accounts;
 		double insterestRate;
 
         public static void main(String[]){
