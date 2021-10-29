@@ -71,25 +71,6 @@ public class BankTest{
                 }
 
                 @Test
-                public void withdrawFailInvalidAccountNumber()
-                {
-                    String password="password";
-                    double amount=20000;
-                    int accountNumber=0000;
-                    boolean result=account.withdraw(amount,password);
-                    assertEquals(result,account.getAccountByNumber(accountNumber));
-                }
-                @Test
-                public void withdrawPassValidAmountAndPassword() {
-                    String password="password";
-                    double amount=20000;
-                    BankAccount account=new BankAccount(1,"Varun",password, amount);
-                    boolean result=account.withdraw(amount, password);
-                    assertTrue(result);
-                    assertEquals(0, account.getBalance(),0.001);
-                }
-
-                @Test
                 public void withdrawFailNegativeAmount() {
                     boolean result=account.withdraw(-1, password);		
                     assertEquals(false, result);
