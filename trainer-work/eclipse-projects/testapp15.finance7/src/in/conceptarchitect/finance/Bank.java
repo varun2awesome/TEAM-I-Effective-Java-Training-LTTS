@@ -1,5 +1,8 @@
 package in.conceptarchitect.finance;
 
+import in.conceptarchitect.finance.exceptions.InsufficientBalanceException;
+import in.conceptarchitect.finance.exceptions.InvalidAccountException;
+
 public class Bank {
 	
 	String name; //name of the bank
@@ -32,7 +35,7 @@ public class Bank {
 
 	public  void setInterestRate(double interestRate) {
 		
-		BankAccount.interestRate = interestRate;
+		this.interestRate = interestRate;
 	}
 	
 	
@@ -58,75 +61,66 @@ public class Bank {
 		return accountNumber;
 	}
 	
-	BankAccount getAccountByNumber(int accountNumber) {
+	 BankAccount getAccountByNumber(int accountNumber) {
 		// TODO Auto-generated method stub
-		if(accountNumber>0 && accountNumber<=lastId)
-			return accounts[accountNumber];
-		else
-			return null;
+		 
+		if(accountNumber<0 || accountNumber>lastId || accounts[accountNumber]==null)
+			 throw new InvalidAccountException(accountNumber);
+		
+		return accounts[accountNumber];
+		
+			
 	}
 	
-	public boolean deposit(int accountNumber, double amount) {
+	public void deposit(int accountNumber, double amount) {
 		
 		BankAccount account = getAccountByNumber(accountNumber);
-		if(account==null)
-			return false;
-		return account.deposit(amount);
+		
+		account.deposit(amount);
 	}
 
-	public double getAccountBalance(int accountNumber) {
+	public double getAccountBalance(int accountNumber,String password) {
 		// TODO Auto-generated method stub
 		BankAccount account=getAccountByNumber(accountNumber);
-		if(account==null)
-			return Double.NaN;
+		account.authenticate(password);
+		
+		//return balance only after validation
 		return account.getBalance();
 	}
 
-	public boolean transfer(int source, double amount, String password, int target) {
+	public void transfer(int source, double amount, String password, int target) {
 		// TODO Auto-generated method stub
-		BankAccount s= getAccountByNumber(source);
 		BankAccount t= getAccountByNumber(target);
-		if(s==null)
-			return false;
-		
-		if(t==null)
-			return false;
+		BankAccount s= getAccountByNumber(source);
 		
 		
-		if(s.withdraw(amount,password))
-			return t.deposit(amount);
-		else
-			return false;
+		s.withdraw(amount,password);
+		t.deposit(amount);
+
 		
 	}
 
-	public boolean closeAccount(int accountNumber, String password) {
+	public void closeAccount(int accountNumber, String password) {
 		// TODO Auto-generated method stub
 		var account=getAccountByNumber(accountNumber);
-		if(account==null)
-			return false;
-		if(!account.authenticate(password))
-			return false;
+		
+		account.authenticate(password);
+			
 		if(account.getBalance()<0)
-			return false;
-		//I have to remove the account from being an active account
-		// let us set null value on the index where account existed.
+			throw new InsufficientBalanceException(accountNumber, - account.getBalance());
 		
 		accounts[accountNumber]=null; //account is actually closed.
 		
 		accountCount--;
-		return true;
+		
 	}
 
-	public boolean withdraw(int accountNumber, int amount, String password) {
+	public void withdraw(int accountNumber, int amount, String password) {
 		// TODO Auto-generated method stub
 		var account=getAccountByNumber(accountNumber);
-		if(account==null)
-			return false;
-		if(account.withdraw(amount, password))
-			return true;
-		else
-			return false;
+		
+		account.withdraw(amount, password);
+		
 	}
 
 	public String getName() {

@@ -2,22 +2,18 @@ package in.conceptarchitect.finance;
 
 import java.util.Scanner;
 
-public class BankAccount {
+import in.conceptarchitect.finance.exceptions.InsufficientBalanceException;
+import in.conceptarchitect.finance.exceptions.InvalidCredentialsException;
+import in.conceptarchitect.finance.exceptions.InvalidDenominationException;
+
+public abstract class BankAccount {
 	
 	int accountNumber;
-	String name;
-	String password;
-	double balance;
-	static double interestRate = 10;
+	private String name;
+	private String password;
+	protected double balance;
 	
-	public static double getInterestRate() {
-		return interestRate;
-	}
-
-	public static void setInterestRate(double interestRate) {
-		
-		BankAccount.interestRate = interestRate;
-	}
+	
 	
 	
 	public BankAccount(int accountNumber, String name, String password, double amount) {
@@ -71,8 +67,8 @@ public class BankAccount {
 	
 	
 	public void changePassword(String oldPassword, String newPassword) {
-		if(authenticate(oldPassword))
-			setPassword(newPassword);
+		authenticate(oldPassword);
+		setPassword(newPassword);
 	}
 	
 
@@ -100,46 +96,70 @@ public class BankAccount {
 		System.out.println();
 		
 	}
-
-	public boolean deposit(double amount) {
+	
+	
+	@Override
+	public String toString() {
 		// TODO Auto-generated method stub
-		if(amount>0) {
-			balance+=amount;
-			return true;
-		} else {
-			return false;
-		}
+		return String.format("%s #%d\t%d\t%s\n", this.getClass().getSimpleName(), accountNumber, (int)balance, name);
+	}
+
+	public void deposit(double amount) {
+		// TODO Auto-generated method stub
+		validateDenomination(amount);
+		balance+=amount;
+		
 	}
 	
 	
-	public boolean authenticate(String password) {
-		if( this.password.equals(salt(password)))
-			return true;
-		else
-			return false;
+	public void authenticate(String password) {
+		if( !this.password.equals(salt(password)))
+			throw new InvalidCredentialsException(accountNumber);
+		
+		//No error here
 	}
 
-
-	public boolean withdraw(double amount, String password) {
-		// TODO Auto-generated method stub
+	protected void validateDenomination(double amount) {
 		if(amount<=0)
-			return false;
-		if (amount>balance) {
-			return false;
-		} 
-		//if (!this.password.equals(password))
-		if(!authenticate(password))
-			return false;
-		else {
-			
-			balance-=amount;
-			return true;
+			throw new InvalidDenominationException(accountNumber, "Amount Must be a Positive Value");
+	}
+	
+	
+	protected abstract double getMaxWithdrawAmount(); //{ return balance ;}
+	
+	
+	private void ensureFunds(double amount) {
+		double max=getMaxWithdrawAmount();
+		if (amount>max) {
+			throw new InsufficientBalanceException(accountNumber, amount-max);
 		}
 	}
 	
+	
+	public void withdraw(double amount, String password) {
+		
+		validateDenomination(amount);
+		
+		ensureFunds(amount); 
+
+		authenticate(password);
+			
+		balance-=amount;		
+		
+	}
+
+	
+
 	
 	public void creditInterest(double interestRate) {
 		balance+=(balance*interestRate/1200);
+	}
+
+
+
+	public void setAccountNumber(int accountNumber) {
+		// TODO Auto-generated method stub
+		this.accountNumber=accountNumber;
 	}
 
 
